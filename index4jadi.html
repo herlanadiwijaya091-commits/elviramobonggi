@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tinelo Lo Ilimu — (YouTube & Bulk Kamus)</title>
+<style>
+  :root{
+    --accent1:#ff7aa2;
+    --accent2:#7a6cff;
+    --accent3:#2dd4bf;
+    --accent4:#ffd166;
+    --card:#ffffff;
+    --muted:#666;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;}
+  body{
+    background-image: url(Budaya.png);
+    background-size: cover;
+    color:#123;display:flex;min-height:100vh;
+  }
+  /* sidebar */
+  .sidebar{
+    width:260px;background:linear-gradient(180deg,var(--accent2),#2b6df6);
+    color:white;padding:22px;border-radius:0 20px 20px 0;display:flex;flex-direction:column;gap:12px;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:18px;}
+  .app-title{font-size:18px;font-weight:700}
+  .nav{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+  .nav button{background:transparent;border:none;color:inherit;text-align:left;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600;opacity:0.96;}
+  .nav button:hover{background:rgba(255,255,255,0.08)}
+  .nav button.active{background:rgba(255,255,255,0.12)}
+  .spacer{flex:1}
+  /* main */
+  .container{flex:1;padding:28px 28px;overflow:auto}
+  header.main-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .card{background:var(--card);border-radius:var(--radius);padding:18px;margin-bottom:16px;box-shadow:0 6px 16px rgba(16,24,40,0.04);border:1px solid rgba(16,24,40,0.03)}
+  h1{margin:0;font-size:20px}
+  .muted{color:var(--muted)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:1000px){.sidebar{display:none}.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}.container{padding:16px}}
+  label{display:block;font-size:13px;margin-bottom:6px;color:var(--muted)}
+  input[type="text"], input[type="password"], textarea, select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(16,24,40,0.06);background:linear-gradient(180deg,#fff,#fcfdff)}
+  textarea{min-height:90px;resize:vertical}
+  .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;background:linear-gradient(90deg,var(--accent3),var(--accent2));color:white}
+  .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06)}
+  .btn.warn{background:linear-gradient(90deg,#ff8a65,#ffb64d)}
+  .list-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px;border-radius:12px;border:1px solid rgba(16,24,40,0.03);background:linear-gradient(180deg,#fff,#fff);margin-bottom:10px}
+  .list-title{font-weight:700}
+  .list-body{color:var(--muted);font-size:14px;margin-top:6px}
+  .actions{display:flex;gap:6px;flex-shrink:0}
+  .chip{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),#ffb3c9);color:white;font-weight:700;font-size:13px}
+  iframe{border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
+  .help{font-size:13px;color:#444;margin-top:6px}
+
+ /* Carousel slider */
+  .carousel{width:100%;max-width:1000px;margin:0 auto 18px auto;aspect-ratio:16/6;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,0.3)}
+  .carousel__track{display:flex;height:100%;transition:transform 0.5s ease}
+  .carousel__slide{min-width:100%;position:relative}
+  .carousel__slide img{width:100%;height:100%;object-fit:cover;display:block}
+  .slide__caption{position:absolute;left:4%;bottom:10%;background:rgba(0,0,0,0.4);color:white;padding:12px 16px;border-radius:10px;max-width:70%}
+  .btn-slide{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer}
+  .btn-prev{left:10px}
+  .btn-next{right:10px}
+  .dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:8px}
+  .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.5);cursor:pointer}
+  .dot.active{background:var(--accent3)}
+
+</style>
+</head>
+<body>
+
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">TL</div>
+      <div>
+        <div class="app-title">Tinelo Lo Ilimu</div>
+        <div class="muted">Literasi & Budaya Gorontalo</div>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="active" data-section="home" onclick="navClick(event)">Beranda</button>
+      <button data-section="teks" onclick="navClick(event)">Teks Literasi</button>
+      <button data-section="kamus" onclick="navClick(event)">Kamus Gorontalo</button>
+      <button data-section="tradisi" onclick="navClick(event)">Tradisi Gorontalo</button>
+      <button data-section="video" onclick="navClick(event)">Video Interaktif</button>
+      <div style="height:8px"></div>
+      <button data-section="login" onclick="navClick(event)" id="loginNav">Login Admin</button>
+      <button id="logoutNav" style="display:none" onclick="logout()">Logout</button>
+    </nav>
+
+    <div class="spacer"></div>
+    <div class="muted" style="font-size:13px">Versi demo · Disimpan di perangkat (LocalStorage)</div>
+  </aside>
+
+  <!-- Main container -->
+  <div class="container">
+    <header class="main-header">
+      <div>
+        <h1>Tinelo Lo Ilimu</h1>
+        <p class="muted">Belajar teks, kamus Bahasa Gorontalo, dan tradisi. Login admin untuk menambah/ubah konten.</p>
+      </div>
+      <div class="user-row">
+        <div id="adminBadge" style="display:none" class="chip">Admin</div>
+        <div id="viewerBadge" class="muted">Viewer</div>
+      </div>
+    </header>
+
+    <!-- HOME -->
+    <section id="home" class="card">
+
+  <!-- Banner Slider -->
+      <div class="carousel" id="carousel">
+        <div class="carousel__track" id="track">
+          <div class="carousel__slide">
+            <img src="foto.jpg" alt="Siswa berseragam di dalam kelas" loading="lazy">
+            <div class="slide__caption"><h3>Belajar Bersama</h3><p>Anak-anak fokus belajar di luar kelas.</p></div>
+          </div>
+          <div class="carousel__slide">
+            <img src="foto3.jpg" alt="Siswa berseragam di dalam kelas" loading="lazy">
+            <div class="slide__caption"><h3>Suasana Kelas</h3><p>Kegiatan belajar mengajar yang nyaman.</p></div>
+          </div>
+          <div class="carousel__slide">
+            <img src="foto2.png" alt="Siswa berseragam di dalam kelas" loading="lazy">
+            <div class="slide__caption"><h3>Diskusi Aktif</h3><p>Siswa melaksanakan sholat dhuha berjamaah.</p></div>
+          </div>
+        </div>
+        <button class="btn-slide btn-prev" onclick="moveSlide(-1)">❮</button>
+        <button class="btn-slide btn-next" onclick="moveSlide(1)">❯</button>
+        <div class="dots" id="dots"></div>
+      </div>
+
+<script>
+// Carousel sederhana
+let currentIndex = 0;
+const track = document.getElementById('track');
+const slides = document.querySelectorAll('.carousel__slide');
+const dotsContainer = document.getElementById('dots');
+
+slides.forEach((s, i)=>{
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  if(i===0) dot.classList.add('active');
+  dot.addEventListener('click', ()=>{goToSlide(i)});
+  dotsContainer.appendChild(dot);
+});
+
+function updateCarousel(){
+  track.style.transform = `translateX(${-currentIndex*100}%)`;
+  document.querySelectorAll('.dot').forEach((d,i)=>{
+    d.classList.toggle('active', i===currentIndex);
+  });
+}
+
+function moveSlide(step){
+  currentIndex = (currentIndex+step+slides.length)%slides.length;
+  updateCarousel();
+}
+function goToSlide(i){ currentIndex=i; updateCarousel(); }
+
+// autoplay
+setInterval(()=>{ moveSlide(1); }, 4000);
+</script>
+
+
+
+
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <strong>Selamat datang!</strong>
+          <div class="muted">Di Tinelo Lo Ilmu Semua Tradisi Gorontalo , Kamus Gorontalo , dan Video tentang Gorontalo Terangkum Disini.</div>
+        </div>
+        <div class="chip">Tinelo Lo Ilimu</div>
+      </div>
+
+      <div style="margin-top:14px" class="grid">
+        <div class="card">
+          <h3>📖 Teks Literasi</h3>
+          <p class="muted">Contoh teks Narasi, Deskripsi, Argumentasi, Eksposisi, Persuasi.</p>
+        </div>
+        <div class="card">
+          <h3>📚 Kamus Gorontalo</h3>
+          <p class="muted">Cari arti kata. Admin dapat input banyak sekaligus.</p>
+        </div>
+        <div class="card">
+          <h3>🎥 Video Interaktif</h3>
+          <p class="muted">Tampilkan video YouTube (embed). Admin dapat menambah beberapa link.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- TEKS -->
+    <section id="teks" class="card" style="display:none">
+      <h2>Teks Literasi</h2>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+        <select id="jenisTeks" onchange="renderTeks()" style="max-width:220px">
+          <option value="">— Pilih jenis teks —</option>
+          <option value="narasi">Narasi</option>
+          <option value="deskripsi">Deskripsi</option>
+          <option value="argumentasi">Argumentasi</option>
+          <option value="eksposisi">Eksposisi</option>
+          <option value="persuasi">Persuasi</option>
+        </select>
+        <input type="text" id="searchTeks" placeholder="Cari kata dalam teks..." oninput="renderTeks()" style="flex:1"/>
+      </div>
+      <div id="teksList"></div>
+
+      <div id="adminTeksArea" style="display:none;margin-top:12px" class="card">
+        <h3>➕ Tambah Teks</h3>
+        <label>Jenis</label>
+        <select id="addJenis">
+          <option value="narasi">Narasi</option> 
+          <option value="deskripsi">Deskripsi</option>
+          <option value="argumentasi">Argumentasi</option>
+          <option value="eksposisi">Eksposisi</option>
+          <option value="persuasi">Persuasi</option>
+        </select>
+        <label>Isi Teks</label>
+        <textarea id="addTeks" placeholder="Tulis teks..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" onclick="addTeks()">Simpan Teks</button>
+          <button class="btn ghost" onclick="exportData()">Export JSON</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- KAMUS -->
+    <section id="kamus" class="card" style="display:none">
+      <h2>Kamus Bahasa Gorontalo</h2>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="kataCari" placeholder="Ketik kata (contoh: halo)" />
+        <button class="btn" onclick="cariKata()">Cari</button>
+      </div>
+      <div id="artiKata" style="margin-top:12px"></div>
+
+      <div id="adminKamusArea" style="display:none;margin-top:14px" class="card">
+        <h3>➕ Tambah / Edit Kata</h3>
+        <label>Tambah satu kata</label>
+        <input type="text" id="kataBaru" placeholder="kata (contoh: hulo)" />
+        <label>Arti</label>
+        <input type="text" id="artiBaru" placeholder="arti (contoh: air)" />
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" onclick="tambahKamus()">Simpan Kata</button>
+          <button class="btn ghost" onclick="renderKamus()">Tampilkan Semua</button>
+        </div>
+
+        <hr style="margin:12px 0">
+
+        <h3>📥 Input Banyak Sekaligus (bulk)</h3>
+        <label>Format per baris: <code>kata=arti</code></label>
+        <textarea id="bulkKamus" placeholder="hulo=air\nwumbuta=rumah\ntilihu=bahasa"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" onclick="tambahBulkKamus()">Tambah Semua</button>
+          <button class="btn ghost" onclick="document.getElementById('bulkKamus').value=''">Kosongkan</button>
+        </div>
+        <div class="help">Setiap baris yang valid (memiliki tanda =) akan diparsing. Kata akan dibuat lowercase otomatis.</div>
+      </div>
+
+      <div id="kamusList" style="margin-top:12px"></div>
+    </section>
+
+    <!-- TRADISI -->
+    <section id="tradisi" class="card" style="display:none">
+      <h2>Tradisi Daerah Gorontalo</h2>
+      <div id="tradisiList"></div>
+
+      <div id="adminTradisiArea" style="display:none;margin-top:14px" class="card">
+        <h3>➕ Tambah Tradisi</h3>
+        <label>Nama Tradisi</label>
+        <input type="text" id="namaTradisi" placeholder="Nama tradisi"/>
+        <label>Deskripsi</label>
+        <textarea id="deskTradisi" placeholder="Deskripsi..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" onclick="tambahTradisi()">Simpan Tradisi</button>
+          <button class="btn ghost" onclick="renderTradisi()">Tampilkan Semua</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIDEO -->
+    <section id="video" class="card" style="display:none">
+      <h2>Video Interaktif (YouTube)</h2>
+      <iframe width="450" height="200" src="https://www.youtube.com/embed/P5roVPbvea0?si=GjRYQ18h51O0NGes" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="450" height="200" src="https://www.youtube.com/embed/RdmNMooTQXU?si=rIPlT2XUnVovfcDF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="450" height="200" src="https://www.youtube.com/embed/uLBRQs0ux34?si=4mLuAOIZXfo9unZu" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="450" height="200" src="https://www.youtube.com/embed/In7z25qCFmo?si=rdBcWUtPbpuetjLU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="450" height="200" src="https://www.youtube.com/embed/HcBbH0Y6ewI?si=HXhVJRa_Ct85_gdk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="450" height="200" src="https://www.youtube.com/embed/xhhNEuEivRk?si=qHErVWQ4KDCzL3ki" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <div id="adminVideoArea" style="display:none;margin-top:14px" class="card">
+        <h3>➕ Tambah Link YouTube</h3>
+        <label>Masukkan link YouTube (boleh banyak, pisah baris atau koma)</label>
+        <textarea id="youtubeInput" placeholder="https://www.youtube.com/watch?v=XXXX\nhttps://youtu.be/YYYY"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" onclick="addYouTubeLinks()">Tambah Link</button>
+          <button class="btn ghost" onclick="document.getElementById('youtubeInput').value=''">Kosongkan</button>
+        </div>
+        <div class="help">Link akan otomatis diparsing menjadi embed. Admin dapat menambah lebih dari satu link.</div>
+      </div>
+    </section>
+
+    <!-- LOGIN -->
+    <section id="login" class="card" style="display:none">
+      <h2>Login Admin</h2>
+      <div style="max-width:540px">
+        <label>Password Admin</label>
+        <input type="password" id="adminPasswordInput" placeholder="Masukkan password admin"/>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" onclick="login()">Login</button>
+          <button class="btn ghost" onclick="showSection('home')">Batal</button>
+        </div>
+        <p id="loginMessage" class="muted"></p>
+
+        <div id="changePwdCard" style="display:none;margin-top:14px" class="card">
+          <h3>🔐 Ubah Password Admin</h3>
+          <label>Password Lama</label>
+          <input type="password" id="oldPwd"/>
+          <label>Password Baru</label>
+          <input type="password" id="newPwd"/>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" onclick="changePassword()">Simpan Password Baru</button>
+            <button class="btn ghost" onclick="resetPasswordForm()">Reset</button>
+          </div>
+          <p id="pwdMsg" class="muted small"></p>
+        </div>
+      </div>
+    </section>
+
+    <footer style="margin-top:18px" class="muted small">© Tinelo Lo Ilimu By Elvira Mobonggi.</footer>
+  </div>
+
+<script>
+/* ========== Storage keys & defaults ========== */
+const LS = {
+  teks: 'tinelo_teks_v2',
+  kamus: 'tinelo_kamus_v2',
+  tradisi: 'tinelo_tradisi_v2',
+  adminPassword: 'tinelo_admin_pwd_v2',
+  isAdmin: 'tinelo_is_admin_v2',
+  youtube: 'tinelo_video_youtube_v2'
+};
+
+
+const defaultTeks = {
+  narasi: ["Suatu hari di pesisir, seorang nelayan bernama Umar..."],
+  deskripsi: ["Pantai Bolihutuo terkenal dengan pasir putihnya..."],
+  argumentasi: ["Pendidikan karakter harus diutamakan karena..."],
+  eksposisi: ["Proses pembuatan kerajinan Gorontalo dimulai dengan..."],
+  persuasi: ["Mari lestarikan budaya lokal agar generasi berikutnya..."]
+};
+
+
+const defaultKamus = {
+  "halo":"Salam, sapaan",
+  "omo":"emak/ibu",
+  "kina":"anak"
+};
+
+const defaultTradisi = [
+  {nama:"Buhu'ae", deskripsi:"Upacara adat untuk menyambut musim panen."},
+  {nama:"Pilode", deskripsi:"Musik dan tari tradisional Gorontalo."}
+];
+
+function loadOrInit(key, fallback){
+  const raw = localStorage.getItem(key);
+  if(!raw){ localStorage.setItem(key, JSON.stringify(fallback)); return JSON.parse(JSON.stringify(fallback)); }
+  try { return JSON.parse(raw); } catch(e){ localStorage.setItem(key, JSON.stringify(fallback)); return JSON.parse(JSON.stringify(fallback)); }
+}
+
+/* in-memory */
+let teksData = loadOrInit(LS.teks, defaultTeks);
+let kamus = loadOrInit(LS.kamus, defaultKamus);
+let tradisiData = loadOrInit(LS.tradisi, defaultTradisi);
+let youtubeList = loadOrInit(LS.youtube, []);
+
+/* admin password & session */
+let ADMIN_PASSWORD = localStorage.getItem(LS.adminPassword) || "12345";
+let isAdmin = localStorage.getItem(LS.isAdmin) === "true";
+
+/* initial render */
+document.addEventListener('DOMContentLoaded', ()=>{
+  updateAuthUI();
+  renderTeks();
+  renderKamus();
+  renderTradisi();
+  renderVideos();
+});
+
+/* navigation helpers */
+function navClick(e){
+  const btn = e.currentTarget;
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const sec = btn.getAttribute('data-section');
+  showSection(sec);
+}
+function showSection(id){
+  document.querySelectorAll('.container > section, .container > footer').forEach(s=>{
+    if(s.id === id) s.style.display = ''; else s.style.display = 'none';
+  });
+  // clear some messages
+  if(id === 'login') document.getElementById('loginMessage').innerText = '';
+}
+
+/* ========== AUTH ========== */
+function updateAuthUI(){
+  document.getElementById('adminBadge').style.display = isAdmin ? 'inline-flex' : 'none';
+  document.getElementById('viewerBadge').style.display = isAdmin ? 'none' : 'inline-flex';
+  document.getElementById('logoutNav').style.display = isAdmin ? 'block' : 'none';
+  document.getElementById('loginNav').style.display = isAdmin ? 'none' : 'block';
+
+  // admin-only areas
+  ['adminTeksArea','adminKamusArea','adminTradisiArea','adminVideoArea'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = isAdmin ? '' : 'none';
+  });
+
+  document.getElementById('changePwdCard').style.display = isAdmin ? '' : 'none';
+
+  // re-render to show/hide edit buttons
+  renderTeks(); renderKamus(); renderTradisi(); renderVideos();
+}
+
+function login(){
+  const v = (document.getElementById('adminPasswordInput').value || "");
+  if(v === ADMIN_PASSWORD){
+    isAdmin = true; localStorage.setItem(LS.isAdmin,"true");
+    updateAuthUI(); document.getElementById('loginMessage').innerText = "Login berhasil — Anda admin."; document.getElementById('adminPasswordInput').value='';
+    showSection('home');
+  } else {
+    document.getElementById('loginMessage').innerText = "Password salah.";
+  }
+}
+function logout(){
+  isAdmin = false; localStorage.removeItem(LS.isAdmin);
+  updateAuthUI(); showSection('home');
+}
+function changePassword(){
+  const oldP = (document.getElementById('oldPwd').value || "");
+  const newP = (document.getElementById('newPwd').value || "");
+  const msg = document.getElementById('pwdMsg');
+  if(!oldP || !newP){ msg.innerText = "Lengkapi kedua field."; return; }
+  if(oldP !== ADMIN_PASSWORD){ msg.innerText = "Password lama salah."; return; }
+  ADMIN_PASSWORD = newP;
+  localStorage.setItem(LS.adminPassword, ADMIN_PASSWORD);
+  msg.innerText = "Password berhasil diubah.";
+  document.getElementById('oldPwd').value=''; document.getElementById('newPwd').value='';
+}
+
+/* ========== TEKS ========== */
+function saveTeks(){ localStorage.setItem(LS.teks, JSON.stringify(teksData)); }
+function renderTeks(){
+  const jenis = document.getElementById('jenisTeks').value;
+  const search = (document.getElementById('searchTeks').value || "").toLowerCase();
+  const container = document.getElementById('teksList'); container.innerHTML = '';
+  if(!jenis){ container.innerHTML = '<div class="muted">Pilih jenis teks terlebih dahulu.</div>'; return; }
+  const arr = teksData[jenis] || [];
+  if(arr.length===0) container.innerHTML = '<div class="muted">Belum ada contoh teks.</div>';
+  arr.forEach((t,i)=>{
+    if(search && t.toLowerCase().indexOf(search) === -1) return;
+    const div = document.createElement('div'); div.className='list-item';
+    const left = document.createElement('div'); left.style.flex='1';
+    left.innerHTML = `<div class="list-title">${i+1}. ${t.substring(0,60)}${t.length>60?'...':''}</div><div class="list-body">${t}</div>`;
+    const actions = document.createElement('div'); actions.className='actions';
+    if(isAdmin){
+      const edit = document.createElement('button'); edit.className='btn ghost'; edit.innerText='Edit'; edit.onclick = ()=> editTeks(jenis,i);
+      const del = document.createElement('button'); del.className='btn warn'; del.innerText='Hapus'; del.onclick = ()=> { if(confirm('Hapus teks ini?')){ teksData[jenis].splice(i,1); saveTeks(); renderTeks(); } };
+      actions.appendChild(edit); actions.appendChild(del);
+    }
+    div.appendChild(left); div.appendChild(actions); container.appendChild(div);
+  });
+}
+function addTeks(){
+  if(!isAdmin){ alert('Hanya admin boleh menambah.'); return; }
+  const jenis = document.getElementById('addJenis').value;
+  const isi = (document.getElementById('addTeks').value || "").trim();
+  if(!isi){ alert('Isi teks kosong.'); return; }
+  teksData[jenis] = teksData[jenis] || []; teksData[jenis].push(isi); saveTeks(); document.getElementById('addTeks').value=''; renderTeks();
+}
+function editTeks(jenis,i){
+  if(!isAdmin) return;
+  const old = teksData[jenis][i];
+  const upd = prompt('Edit teks:', old);
+  if(upd !== null){ teksData[jenis][i] = upd; saveTeks(); renderTeks(); }
+}
+
+/* ========== KAMUS (single + bulk) ========== */
+function saveKamus(){ localStorage.setItem(LS.kamus, JSON.stringify(kamus)); }
+function renderKamus(){
+  const container = document.getElementById('kamusList'); container.innerHTML = '';
+  const keys = Object.keys(kamus).sort();
+  if(keys.length === 0) container.innerHTML = '<div class="muted">Kamus kosong.</div>';
+  keys.forEach(k=>{
+    const div = document.createElement('div'); div.className='list-item';
+    const left = document.createElement('div'); left.style.flex='1';
+    left.innerHTML = `<div class="list-title">${k}</div><div class="list-body">${kamus[k]}</div>`;
+    const actions = document.createElement('div'); actions.className='actions';
+    if(isAdmin){
+      const edit = document.createElement('button'); edit.className='btn ghost'; edit.innerText='Edit'; edit.onclick = ()=> editKata(k);
+      const del = document.createElement('button'); del.className='btn warn'; del.innerText='Hapus'; del.onclick = ()=> { if(confirm('Hapus kata "'+k+'"?')){ delete kamus[k]; saveKamus(); renderKamus(); document.getElementById('artiKata').innerHTML=''; } };
+      actions.appendChild(edit); actions.appendChild(del);
+    }
+    div.appendChild(left); div.appendChild(actions); container.appendChild(div);
+  });
+}
+
+function cariKata(){
+  const q = (document.getElementById('kataCari').value || "").trim().toLowerCase();
+  const out = document.getElementById('artiKata');
+  if(!q){ out.innerHTML = '<div class="muted">Ketik kata lalu tekan Cari.</div>'; return; }
+  const arti = kamus[q];
+  if(!arti){ out.innerHTML = `<div class="muted">Kata tidak ditemukan: <b>${q}</b></div>`; return; }
+  let html = `<div class="card"><strong>${q}</strong><div class="muted" style="margin-top:6px">${arti}</div></div>`;
+  if(isAdmin){
+    html += `<div style="margin-top:8px"><button class="btn ghost" onclick="editKata('${q}')">Edit</button> <button class="btn warn" onclick="if(confirm('Hapus kata ${q}?')){hapusKata('${q}')}">Hapus</button></div>`;
+  }
+  out.innerHTML = html;
+}
+
+function tambahKamus(){
+  if(!isAdmin){ alert('Hanya admin.'); return; }
+  const k = (document.getElementById('kataBaru').value || "").trim().toLowerCase();
+  const a = (document.getElementById('artiBaru').value || "").trim();
+  if(!k || !a){ alert('Lengkapi kata & arti.'); return; }
+  kamus[k] = a; saveKamus(); document.getElementById('kataBaru').value=''; document.getElementById('artiBaru').value=''; renderKamus(); alert('Kata tersimpan.');
+}
+
+function tambahBulkKamus(){
+  if(!isAdmin){ alert('Hanya admin.'); return; }
+  const raw = (document.getElementById('bulkKamus').value || "").trim();
+  if(!raw){ alert('Tidak ada input bulk.'); return; }
+  const lines = raw.split(/\r?\n/);
+  let added = 0, skipped = 0;
+  lines.forEach(line=>{
+    const l = line.trim();
+    if(!l) return;
+    const idx = l.indexOf('=');
+    if(idx === -1){ skipped++; return; }
+    const k = l.substring(0,idx).trim().toLowerCase();
+    const a = l.substring(idx+1).trim();
+    if(!k || !a){ skipped++; return; }
+    kamus[k] = a; added++;
+  });
+  saveKamus(); renderKamus(); document.getElementById('bulkKamus').value='';
+  alert(`Bulk selesai. Ditambahkan: ${added}. Dilewati/invalid: ${skipped}.`);
+}
+
+function editKata(k){
+  if(!isAdmin) return;
+  const newA = prompt('Edit arti untuk: '+k, kamus[k]);
+  if(newA !== null){ kamus[k] = newA; saveKamus(); renderKamus(); cariKata(); }
+}
+function hapusKata(k){
+  if(!isAdmin) return;
+  delete kamus[k]; saveKamus(); renderKamus(); document.getElementById('artiKata').innerHTML = `<div class="muted">Kata ${k} dihapus.</div>`;
+}
+
+/* ========== TRADISI ========== */
+function saveTradisi(){ localStorage.setItem(LS.tradisi, JSON.stringify(tradisiData)); }
+function renderTradisi(){
+  const container = document.getElementById('tradisiList'); container.innerHTML = '';
+  if(tradisiData.length === 0) container.innerHTML = '<div class="muted">Belum ada tradisi.</div>';
+  tradisiData.forEach((t,i)=>{
+    const div = document.createElement('div'); div.className='list-item';
+    const left = document.createElement('div'); left.style.flex='1';
+    left.innerHTML = `<div class="list-title">${t.nama}</div><div class="list-body">${t.deskripsi}</div>`;
+    const actions = document.createElement('div'); actions.className='actions';
+    if(isAdmin){
+      const edit = document.createElement('button'); edit.className='btn ghost'; edit.innerText='Edit'; edit.onclick = ()=> editTradisi(i);
+      const del = document.createElement('button'); del.className='btn warn'; del.innerText='Hapus'; del.onclick = ()=> { if(confirm('Hapus tradisi ini?')){ tradisiData.splice(i,1); saveTradisi(); renderTradisi(); } };
+      actions.appendChild(edit); actions.appendChild(del);
+    }
+    div.appendChild(left); div.appendChild(actions); container.appendChild(div);
+  });
+}
+function tambahTradisi(){
+  if(!isAdmin){ alert('Hanya admin.'); return; }
+  const nama = (document.getElementById('namaTradisi').value || "").trim();
+  const desk = (document.getElementById('deskTradisi').value || "").trim();
+  if(!nama || !desk){ alert('Lengkapi nama & deskripsi.'); return; }
+  tradisiData.push({nama, deskripsi:desk}); saveTradisi(); document.getElementById('namaTradisi').value=''; document.getElementById('deskTradisi').value=''; renderTradisi();
+}
+function editTradisi(i){
+  if(!isAdmin) return;
+  const t = tradisiData[i];
+  const newName = prompt('Edit nama tradisi:', t.nama); if(newName === null) return;
+  const newDesk = prompt('Edit deskripsi:', t.deskripsi); if(newDesk === null) return;
+  tradisiData[i] = {nama:newName, deskripsi:newDesk}; saveTradisi(); renderTradisi();
+}
+
+/* ========== VIDEO (YouTube) ========== */
+function saveYouTubeList(){ localStorage.setItem(LS.youtube, JSON.stringify(youtubeList)); }
+function renderVideos(){
+  const container = document.getElementById('videoContainer'); container.innerHTML = '';
+  if(!youtubeList || youtubeList.length === 0){ container.innerHTML = '<div class="muted">Belum ada video. (Admin dapat menambah link YouTube)</div>'; return; }
+  youtubeList.forEach((url, i)=>{
+    const id = parseYouTubeId(url);
+    if(!id) return;
+    const wrap = document.createElement('div'); wrap.style.minHeight='180px';
+    wrap.innerHTML = `<iframe width="100%" height="220" src="https://www.youtube.com/embed/${id}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      ${isAdmin?'<div style="margin-top:6px"><button class="btn ghost" onclick="removeYouTube('+i+')">Hapus</button></div>':''}`;
+    container.appendChild(wrap);
+  });
+}
+
+function parseYouTubeId(url){
+  if(!url) return null;
+  try{
+    // trim, remove whitespace
+    const u = url.trim();
+    // if short youtu.be
+    const b = u.match(/youtu\.be\/([^\?\&\s]+)/);
+    if(b && b[1]) return b[1];
+    // if /embed/
+    const e = u.match(/\/embed\/([^\?\&\s]+)/);
+    if(e && e[1]) return e[1];
+    // if watch?v=
+    const q = u.match(/[?&]v=([^&\s]+)/);
+    if(q && q[1]) return q[1];
+    // if just id
+    if(/^[A-Za-z0-9_-]{10,}$/.test(u)) return u;
+    return null;
+  }catch(e){ return null; }
+}
+
+function addYouTubeLinks(){
+  if(!isAdmin){ alert('Hanya admin.'); return; }
+  const raw = (document.getElementById('youtubeInput').value || "").trim();
+  if(!raw){ alert('Masukkan link YouTube.'); return; }
+  // split by line or comma
+  const parts = raw.split(/[\n,]+/).map(s=>s.trim()).filter(Boolean);
+  let added=0, skipped=0;
+  parts.forEach(p=>{
+    const id = parseYouTubeId(p);
+    if(id){
+      // don't add duplicates
+      if(!youtubeList.includes(id)){
+        youtubeList.push(id); added++;
+      } else skipped++;
+    } else skipped++;
+  });
+  saveYouTubeList(); renderVideos(); document.getElementById('youtubeInput').value='';
+  alert(`Selesai. Ditambahkan: ${added}. Tidak valid/duplikat: ${skipped}.`);
+}
+function removeYouTube(index){
+  if(!isAdmin) return;
+  if(index<0 || index>=youtubeList.length) return;
+  if(!confirm('Hapus video ini?')) return;
+  youtubeList.splice(index,1); saveYouTubeList(); renderVideos();
+}
+
+/* ========== Export (data) ========= */
+function exportData(){
+  const payload = {teks: teksData, kamus: kamus, tradisi: tradisiData, youtube: youtubeList};
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'tinelo_export.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
+/* expose for debugging */
+window._tinelo = {teksData, kamus, tradisiData, youtubeList, saveTeks, saveKamus, saveTradisi, saveYouTubeList};
+
+</script>
+</body>
+</html>
